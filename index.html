@@ -28,7 +28,7 @@ h1{font-size:24px;margin-bottom:8px}
 <div class="card">
 <h2>Mac Safari</h2>
 <div class="step"><span class="num">1</span><div class="txt">把下面按钮<strong>拖到书签栏</strong></div></div>
-<div style="text-align:center"><a class="bm" id="bm-link" href="#">翻译</a></div>
+<div style="text-align:center"><a class="bm" id="bm-link">翻译</a></div>
 <div class="step"><span class="num">2</span><div class="txt">在任意英文网页点击书签栏「翻译」按钮</div></div>
 </div>
 <div class="card">
@@ -49,7 +49,7 @@ h1{font-size:24px;margin-bottom:8px}
 </div>
 <script>
 var BASE="https://joesonbox-netizen.github.io/translate";
-var CODE="void(fetch('"+BASE+"/t.js').then(function(r){return r.text()}).then(eval))";
+var CODE="javascript:void(fetch('"+BASE+"/t.js').then(function(r){return r.text()}).then(eval))";
 document.getElementById('bm-link').href=CODE;
 document.getElementById('bm-code').textContent=CODE;
 </script>
