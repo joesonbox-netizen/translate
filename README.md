@@ -1,2 +1,1 @@
-# translate
-Translation bookmarklet
+# Translation Bookmarklet
