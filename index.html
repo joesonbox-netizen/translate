@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>翻译插件安装</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:#f5f5f7;color:#1a1a1a;padding:20px}
+.c{max-width:600px;margin:0 auto}
+h1{font-size:24px;margin-bottom:8px}
+.sub{color:#666;margin-bottom:24px;font-size:14px}
+.card{background:#fff;border-radius:12px;padding:20px;margin-bottom:16px;box-shadow:0 2px 8px rgba(0,0,0,.06)}
+.card h2{font-size:17px;margin-bottom:12px}
+.step{display:flex;gap:12px;margin-bottom:16px;align-items:flex-start}
+.num{background:#007AFF;color:#fff;width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:600;flex-shrink:0}
+.txt{font-size:15px;line-height:1.5;padding-top:2px}
+.txt code{background:#f0f0f0;padding:2px 6px;border-radius:4px;font-size:13px}
+.bm{display:inline-block;background:#007AFF;color:#fff;padding:10px 24px;border-radius:8px;text-decoration:none;font-size:16px;font-weight:500;margin:8px 0;cursor:move}
+.tip{background:#fff3cd;border-radius:8px;padding:12px 16px;font-size:13px;color:#856404;margin-top:8px}
+.code{background:#f0f0f0;padding:12px;border-radius:8px;font-size:12px;word-break:break-all;font-family:monospace;user-select:all;-webkit-user-select:all;margin:8px 0}
+</style>
+</head>
+<body>
+<div class="c">
+<h1>翻译插件安装</h1>
+<p class="sub">Mac Safari + iPhone Safari 通用 · Google Translate · 免费</p>
+<div class="card">
+<h2>Mac Safari</h2>
+<div class="step"><span class="num">1</span><div class="txt">把下面按钮<strong>拖到书签栏</strong></div></div>
+<div style="text-align:center"><a class="bm" id="bm-link" href="#">翻译</a></div>
+<div class="step"><span class="num">2</span><div class="txt">在任意英文网页点击书签栏「翻译」按钮</div></div>
+</div>
+<div class="card">
+<h2>iPhone Safari</h2>
+<div class="step"><span class="num">1</span><div class="txt">长按下面代码 → 拷贝</div></div>
+<div class="code" id="bm-code">加载中...</div>
+<div class="step"><span class="num">2</span><div class="txt">Safari 打开任意网页 → 地址栏输入任意网址 → 前往</div></div>
+<div class="step"><span class="num">3</span><div class="txt">底部「分享」→「添加书签」→ 名字写「翻译」→ 存储</div></div>
+<div class="step"><span class="num">4</span><div class="txt">底部书签按钮 → 找到「翻译」→ 左滑 →「编辑」</div></div>
+<div class="step"><span class="num">5</span><div class="txt">「地址」栏全部删掉 → 粘贴刚才拷贝的代码 → 完成</div></div>
+<div class="tip">使用：打开英文网页 → 书签 → 「翻译」→ 点击即可</div>
+</div>
+<div class="card">
+<h2>设置</h2>
+<p style="font-size:14px;color:#666">默认使用 Google Translate（免费，无需 API Key）</p>
+<p style="font-size:14px;color:#666;margin-top:4px">支持切换 DeepL / OpenAI / Claude（需 API Key）</p>
+</div>
+</div>
+<script>
+var BASE="https://joesonbox-netizen.github.io/translate";
+var CODE="void(fetch('"+BASE+"/t.js').then(function(r){return r.text()}).then(eval))";
+document.getElementById('bm-link').href=CODE;
+document.getElementById('bm-code').textContent=CODE;
+</script>
+</body>
+</html>
