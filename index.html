@@ -49,7 +49,7 @@ h1{font-size:24px;margin-bottom:8px}
 </div>
 <script>
 var BASE="https://joesonbox-netizen.github.io/translate";
-var CODE="javascript:void(fetch('"+BASE+"/t.js').then(function(r){return r.text()}).then(eval))";
+var CODE="javascript:void(function(){var s=document.createElement('script');s.src='"+BASE+"/t.js';s.onload=function(){window._dlTranslate&&window._dlTranslate()};document.head.appendChild(s)}())";
 document.getElementById('bm-link').href=CODE;
 document.getElementById('bm-code').textContent=CODE;
 </script>
