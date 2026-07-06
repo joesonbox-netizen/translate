@@ -2,6 +2,8 @@
   'use strict';
   
   var GOOGLE_ENDPOINT = 'https://translate.googleapis.com/translate_a/single';
+  var CONCURRENCY = 5;
+  var DELAY_MS = 100;
   var origTexts = new Map();
   var bar = null;
   
@@ -11,7 +13,7 @@
     if (!bar) {
       bar = document.createElement('div');
       bar.id = 'dl-bar';
-      bar.style.cssText = 'position:fixed;top:12px;right:12px;z-index:2147483647;background:linear-gradient(135deg,#0f2b46,#1a4b7a);color:#fff;padding:10px 18px;border-radius:10px;font:14px/1.4 -apple-system,sans-serif;box-shadow:0 4px 20px rgba(0,0,0,.25);display:flex;align-items:center;gap:12px';
+      bar.style.cssText = 'position:fixed;top:12px;right:12px;z-index:2147483647;background:linear-gradient(135deg,#0f2b46,#1a4b7a);color:#fff;padding:10px 18px;border-radius:10px;font:14px/1.4 -apple-system,sans-serif;box-shadow:0 4px 20px rgba(0,0,0,.25);display:flex;align-items:center;gap:12px;max-width:320px';
       document.body.appendChild(bar);
     }
     bar.innerHTML = '<div style="width:16px;height:16px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:dl-spin .6s linear infinite"></div><span>' + escHtml(msg) + '</span><button onclick="window._dlRestore()" style="background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);border-radius:6px;padding:3px 10px;font-size:12px;cursor:pointer;color:#fff;margin-left:8px">原文</button>';
@@ -58,39 +60,6 @@
     return nodes;
   }
   
-  function translateNodes(nodes, done) {
-    var idx = 0;
-    var translated = 0;
-    
-    function next() {
-      if (idx >= nodes.length) {
-        done(translated);
-        return;
-      }
-      
-      var node = nodes[idx];
-      var text = node.textContent.trim();
-      idx++;
-      
-      if (!text || text.length < 2) {
-        next();
-        return;
-      }
-      
-      translateGoogle(text, function(err, result) {
-        if (!err && result && result !== text) {
-          origTexts.set(node, node.textContent);
-          node.textContent = node.textContent.replace(text, result);
-          translated++;
-        }
-        showProgress('翻译中 ' + translated + '/' + nodes.length);
-        setTimeout(next, 50);
-      });
-    }
-    
-    next();
-  }
-  
   function restoreOriginal() {
     origTexts.forEach(function(orig, node) {
       try { node.textContent = orig; } catch(e) {}
@@ -99,16 +68,50 @@
     if (bar) { bar.remove(); bar = null; }
   }
   
-  // Expose restore function
   window._dlRestore = restoreOriginal;
   
-  // Start translation
   showProgress('准备翻译...');
   var nodes = collectTextNodes();
-  showProgress('翻译中 0/' + nodes.length);
+  var total = nodes.length;
+  var translated = 0;
+  var idx = 0;
+  var active = 0;
   
-  translateNodes(nodes, function(count) {
-    showProgress('翻译完成 ' + count + ' 段');
-    setTimeout(function() { if (bar) { bar.remove(); bar = null; } }, 3000);
-  });
+  function next() {
+    if (idx >= total && active === 0) {
+      showProgress('翻译完成 ' + translated + ' 段');
+      setTimeout(function() { if (bar) { bar.remove(); bar = null; } }, 3000);
+      return;
+    }
+    
+    while (active < CONCURRENCY && idx < total) {
+      (function(i) {
+        var node = nodes[i];
+        var text = node.textContent.trim();
+        
+        if (!text || text.length < 2) {
+          idx++;
+          next();
+          return;
+        }
+        
+        active++;
+        translateGoogle(text, function(err, result) {
+          active--;
+          
+          if (!err && result && result !== text) {
+            origTexts.set(node, node.textContent);
+            node.textContent = node.textContent.replace(text, result);
+            translated++;
+          }
+          
+          showProgress('翻译中 ' + translated + '/' + total);
+          setTimeout(next, DELAY_MS);
+        });
+      })(idx);
+      idx++;
+    }
+  }
+  
+  next();
 })();
