@@ -1,1 +1,114 @@
-!function(){"use strict";var e="dl-page-translate-style",t="dl-page-translate-bar",n=new Map,o=0,r=0,a=!1;function i(n,o){!function(){if(!document.getElementById(e)){var n=document.createElement("style");n.id=e,n.textContent="#"+t+"{position:fixed;top:12px;right:12px;z-index:2147483647;background:linear-gradient(135deg,#0f2b46,#1a4b7a);color:#fff;padding:10px 18px;border-radius:10px;font:14px/1.4 -apple-system,sans-serif;box-shadow:0 4px 20px rgba(0,0,0,.25);display:flex;align-items:center;gap:12px;max-width:320px}#"+t+" .dl-bar-close{background:none;border:none;color:#fff;font-size:18px;cursor:pointer;padding:0 2px;opacity:.7}#"+t+" .dl-bar-close:hover{opacity:1}#"+t+" .dl-bar-spinner{width:16px;height:16px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:dl-spin .6s linear infinite}#"+t+" .dl-bar-btn{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);border-radius:6px;padding:3px 10px;font-size:12px;cursor:pointer;color:#fff;margin-left:4px}#"+t+" .dl-bar-btn:hover{background:rgba(255,255,255,.25)}@keyframes dl-spin{to{transform:rotate(360deg)}}",document.head.appendChild(n)}}();var r,a,i=document.getElementById(t);i||((i=document.createElement("div")).id=t,document.body.appendChild(i)),i.innerHTML=(o?'<div class="dl-bar-spinner"></div>':"")+"<span>"+(r=n,(a=document.createElement("div")).textContent=r,a.innerHTML+'</span><button class="dl-bar-btn" id="dl-bar-restore">原文</button><button class="dl-bar-close" id="dl-bar-close">&times;</button>'),document.getElementById("dl-bar-close").onclick=function(){i.remove()},document.getElementById("dl-bar-restore").onclick=s}function l(){var e=document.getElementById(t);e&&e.remove()}function d(e,t,n){!function(e,t,n){var o="https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl="+("ZH"===t?"zh-CN":t.toLowerCase())+"&dt=t&q="+encodeURIComponent(e),r="https://api.allorigins.win/raw?url="+encodeURIComponent(o);function a(){var e=new XMLHttpRequest;e.open("GET",r,!0),e.timeout=15e3,e.onload=function(){i(e)},e.onerror=function(){n("Network error")},e.ontimeout=function(){n("Timeout")},e.send()}function i(e){if(200===e.status)try{var t=JSON.parse(e.responseText);if(t&&t[0]){for(var o="",r=0;r<t[0].length;r++)t[0][r][0]&&(o+=t[0][r][0]);n(null,o)}else n("Empty response")}catch(e){n("Parse error")}else n("HTTP "+e.status)}!function(){var e=new XMLHttpRequest;e.open("GET",o,!0),e.timeout=5e3,e.onload=function(){i(e)},e.onerror=function(){a()},e.ontimeout=function(){a()},e.send()}(),xhr.onload=function(){if(200===xhr.status)try{var e=JSON.parse(xhr.responseText);if(e&&e[0]){for(var t="",o=0;o<e[0].length;o++)e[0][o][0]&&(t+=e[0][o][0]);n(null,t)}else n("Empty response")}catch(e){n("Parse error")}else n("HTTP "+xhr.status)},xhr.onerror=function(){n("Network error")},xhr.ontimeout=function(){n("Timeout")},xhr.send()}(e.map(function(e){return e.text}).join("\n\n|||---|||\n\n"),t,function(t,o){if(t)n(t);else{var r=o.split(/\n\s*\|\|\|---\|\|\|\s*\n/);if(r.length<e.length&&(r=o.split(/\n{2,}/)),r.length<e.length)for(var a=r.length;a<e.length;a++)r.push(e[a].text);n(null,r)}})}function s(){n.forEach(function(e,t){try{t.textContent=e}catch(e){}}),n.clear(),l(),i("已恢复原文",!1),setTimeout(l,1500)}function c(){a=!1,o=0,n.clear();var e=localStorage.getItem("dl_bm_target_lang")||"ZH",s=function(){for(var e=[],n=new Set(["SCRIPT","STYLE","NOSCRIPT","IFRAME","OBJECT","EMBED","SVG","MATH","CODE","PRE","TEXTAREA","INPUT","SELECT"]),o=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT,{acceptNode:function(e){return e.textContent.trim()?n.has(e.parentElement.tagName)||e.parentElement.closest("#"+t)||e.parentElement.closest("[contenteditable]")?NodeFilter.FILTER_REJECT:NodeFilter.FILTER_ACCEPT:NodeFilter.FILTER_REJECT}});o.nextNode();)e.push(o.currentNode);return e}();if(0===s.length)return i("没有找到可翻译的文本",!1),void setTimeout(l,2e3);var c=function(e){for(var t=[],n=[],o=0,r=0;r<e.length;r++){var a=e[r].textContent.trim();a&&(o+a.length>4e3&&n.length>0&&(t.push(n),n=[],o=0),n.push({node:e[r],text:a}),o+=a.length)}return n.length>0&&t.push(n),t}(s);r=0;for(var u=0;u<c.length;u++)r+=c[u].length;i("翻译中 0/"+r,!0);var p=0,f=0;!function t(){if(!a){if(p>=c.length&&0===f)return i("翻译完成 "+r+" 段",!1),void setTimeout(l,3e3);for(;f<3&&p<c.length;)(function(a){var l,s,c,u;f++,l=a,s=e,c=function(){f--,setTimeout(t,200)},u=0,function e(){d(l,s,function(t,a){if(t&&u<2)return u++,void setTimeout(e,1e3);if(!t&&a){for(var d=0;d<l.length;d++)a[d]&&(n.set(l[d].node,l[d].node.textContent),l[d].node.textContent=l[d].node.textContent.replace(l[d].text,a[d]));i("翻译中 "+(o+=l.length)+"/"+r,!0),c()}else c()})}()})(c[p]),p++}}()}window._dlTranslate=c,window._dlRestore=s,c()}();
+(function() {
+  'use strict';
+  
+  var GOOGLE_ENDPOINT = 'https://translate.googleapis.com/translate_a/single';
+  var origTexts = new Map();
+  var bar = null;
+  
+  function escHtml(s) { var d = document.createElement('div'); d.textContent = s; return d.innerHTML; }
+  
+  function showProgress(msg) {
+    if (!bar) {
+      bar = document.createElement('div');
+      bar.id = 'dl-bar';
+      bar.style.cssText = 'position:fixed;top:12px;right:12px;z-index:2147483647;background:linear-gradient(135deg,#0f2b46,#1a4b7a);color:#fff;padding:10px 18px;border-radius:10px;font:14px/1.4 -apple-system,sans-serif;box-shadow:0 4px 20px rgba(0,0,0,.25);display:flex;align-items:center;gap:12px';
+      document.body.appendChild(bar);
+    }
+    bar.innerHTML = '<div style="width:16px;height:16px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:dl-spin .6s linear infinite"></div><span>' + escHtml(msg) + '</span><button onclick="window._dlRestore()" style="background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);border-radius:6px;padding:3px 10px;font-size:12px;cursor:pointer;color:#fff;margin-left:8px">原文</button>';
+  }
+  
+  function translateGoogle(text, cb) {
+    var url = GOOGLE_ENDPOINT + '?client=gtx&sl=auto&tl=zh-CN&dt=t&q=' + encodeURIComponent(text);
+    var proxyUrl = 'https://api.allorigins.win/raw?url=' + encodeURIComponent(url);
+    
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', proxyUrl, true);
+    xhr.timeout = 15000;
+    xhr.onload = function() {
+      if (xhr.status === 200) {
+        try {
+          var data = JSON.parse(xhr.responseText);
+          if (data && data[0]) {
+            var result = '';
+            for (var i = 0; i < data[0].length; i++) {
+              if (data[0][i][0]) result += data[0][i][0];
+            }
+            cb(null, result);
+          } else cb('Empty');
+        } catch(e) { cb('Parse error'); }
+      } else cb('HTTP ' + xhr.status);
+    };
+    xhr.onerror = function() { cb('Network error'); };
+    xhr.ontimeout = function() { cb('Timeout'); };
+    xhr.send();
+  }
+  
+  function collectTextNodes() {
+    var nodes = [];
+    var skip = new Set(['SCRIPT','STYLE','NOSCRIPT','IFRAME','OBJECT','EMBED','SVG','MATH','CODE','PRE','TEXTAREA','INPUT','SELECT']);
+    var walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, {
+      acceptNode: function(node) {
+        if (!node.textContent.trim()) return NodeFilter.FILTER_REJECT;
+        if (skip.has(node.parentElement.tagName)) return NodeFilter.FILTER_REJECT;
+        if (node.parentElement.closest('#dl-bar')) return NodeFilter.FILTER_REJECT;
+        return NodeFilter.FILTER_ACCEPT;
+      }
+    });
+    while (walker.nextNode()) nodes.push(walker.currentNode);
+    return nodes;
+  }
+  
+  function translateNodes(nodes, done) {
+    var idx = 0;
+    var translated = 0;
+    
+    function next() {
+      if (idx >= nodes.length) {
+        done(translated);
+        return;
+      }
+      
+      var node = nodes[idx];
+      var text = node.textContent.trim();
+      idx++;
+      
+      if (!text || text.length < 2) {
+        next();
+        return;
+      }
+      
+      translateGoogle(text, function(err, result) {
+        if (!err && result && result !== text) {
+          origTexts.set(node, node.textContent);
+          node.textContent = node.textContent.replace(text, result);
+          translated++;
+        }
+        showProgress('翻译中 ' + translated + '/' + nodes.length);
+        setTimeout(next, 50);
+      });
+    }
+    
+    next();
+  }
+  
+  function restoreOriginal() {
+    origTexts.forEach(function(orig, node) {
+      try { node.textContent = orig; } catch(e) {}
+    });
+    origTexts.clear();
+    if (bar) { bar.remove(); bar = null; }
+  }
+  
+  // Expose restore function
+  window._dlRestore = restoreOriginal;
+  
+  // Start translation
+  showProgress('准备翻译...');
+  var nodes = collectTextNodes();
+  showProgress('翻译中 0/' + nodes.length);
+  
+  translateNodes(nodes, function(count) {
+    showProgress('翻译完成 ' + count + ' 段');
+    setTimeout(function() { if (bar) { bar.remove(); bar = null; } }, 3000);
+  });
+})();
